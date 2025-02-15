@@ -5,6 +5,8 @@
 //  Created by CodeBlock on 15/02/2025.
 //
 
+import Foundation
+
 struct DealsResponse: Codable {
     let numDeals: Int
     let deals: [Deal]
@@ -15,11 +17,19 @@ struct DealsResponse: Codable {
     }
 }
 
+typealias DealImage = String
+
+extension DealImage {
+    var fullURL: URL? {
+        URL(string: "https://images.socialdeal.nl\(self)")
+    }
+}
+
 struct Deal: Codable, Identifiable {
     var id: String { unique }
     let unique: String
     let title: String
-    let image: String
+    let image: DealImage
     let soldLabel: String
     let company: String
     let city: String
@@ -52,9 +62,23 @@ struct Prices: Codable {
 
 typealias PriceAmount = Int
 
+extension PriceAmount {
+    func toDecimal() -> Double {
+        return Double(self) / 100
+    }
+    
+    func toDecimalString() -> String {
+        return String(format: "%.2f", toDecimal())
+    }
+}
+
 struct Price: Codable {
     let amount: PriceAmount
     let currency: PriceCurrency
+    
+    func toString() -> String {
+        return "\(currency.symbol) \(amount.toDecimalString())"
+    }
 }
 
 struct PriceCurrency: Codable {

@@ -12,7 +12,8 @@ class DealsOverviewViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Deals"
-        loadDeals()
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         setupView()
     }
     
@@ -33,14 +34,6 @@ class DealsOverviewViewController: UIViewController {
             dealsViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
 
-        // Notify the child view controller that it has been moved to a parent
         dealsViewController.didMove(toParent: self)
-    }
-    
-    private func loadDeals() {
-        Task {
-            let deals = await DealService.shared.fetchDeals()
-            print(deals)
-        }
     }
 }

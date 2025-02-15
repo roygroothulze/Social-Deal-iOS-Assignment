@@ -15,6 +15,8 @@ class DealsListViewController: UIViewController {
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 300
         return tableView
     }()
 
@@ -37,7 +39,7 @@ class DealsListViewController: UIViewController {
         ])
 
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DealCell")
+        tableView.register(DealTableViewCell.self, forCellReuseIdentifier: "DealCell")
     }
 
     private func bindViewModel() {
@@ -71,10 +73,11 @@ extension DealsListViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DealCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DealCell", for: indexPath) as? DealTableViewCell else {
+            return UITableViewCell()
+        }
         let deal = viewModel.deals[indexPath.row]
-        cell.textLabel?.text = deal.title
-        cell.detailTextLabel?.text = deal.company
+        cell.configure(with: deal)
         return cell
     }
 }
