@@ -8,6 +8,8 @@
 import UIKit
 
 class DealCardView: UIView {
+    var deal: Deal?
+    
     private let imageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
@@ -65,6 +67,7 @@ class DealCardView: UIView {
         let view = UIImageView(image: UIImage(systemName: "heart"))
         view.tintColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
         return view
     }()
 
@@ -88,6 +91,9 @@ class DealCardView: UIView {
         addSubview(fromPriceLabel)
         addSubview(priceLabel)
         addSubview(favouriteIcon)
+        
+        let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleFavouriteTap))
+        favouriteIcon.addGestureRecognizer(tabGestureRecognizer)
 
         // Layout constraints
         NSLayoutConstraint.activate([
@@ -120,6 +126,7 @@ class DealCardView: UIView {
     }
     
     func configure(with deal: Deal) {
+        self.deal = deal
         if let url = deal.image.fullURL {
             loadImage(from: url)
         }
@@ -137,6 +144,10 @@ class DealCardView: UIView {
         fromPriceLabel.attributedText = attributedString
         
         priceLabel.text = deal.prices.price.toString()
+        
+        if FavouriteService.shared.isFavourite(deal) {
+            favouriteIcon.image = UIImage(systemName: "heart.fill")
+        }
     }
     
     private func loadImage(from url: URL) {
@@ -151,6 +162,17 @@ class DealCardView: UIView {
                 print("Failed to load image: \(error)")
             }
         }
+    }
+    
+    @objc func handleFavouriteTap() {
+        guard let deal else { return }
+        if FavouriteService.shared.isFavourite(deal) {
+            favouriteIcon.image = UIImage(systemName: "heart")
+        } else {
+            favouriteIcon.image = UIImage(systemName: "heart.fill")
+        }
+        
+        FavouriteService.shared.toggleFavourite(deal)
     }
 
 }
