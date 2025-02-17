@@ -17,6 +17,10 @@ class DealsOverviewViewController: UIViewController {
         setupView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
     private let dealsViewController = DealsListViewController()
     
     private func setupView() {

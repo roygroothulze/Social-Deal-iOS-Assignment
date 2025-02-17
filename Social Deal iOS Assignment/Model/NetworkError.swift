@@ -5,7 +5,6 @@
 //  Created by CodeBlock on 15/02/2025.
 //
 
-
 enum NetworkError: String, Error {
     case invalidURL = "Invalid URL"
     case requestFailed = "Request Failed"

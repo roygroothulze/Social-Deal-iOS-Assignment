@@ -113,7 +113,6 @@ class DealCardView: UIView {
             imageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-//            imageView.heightAnchor.constraint(equalToConstant: 200),
 
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
             titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),

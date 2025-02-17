@@ -25,7 +25,6 @@ class APIRepository {
             let dealsResponse = try JSONDecoder().decode(DealsResponse.self, from: data)
             return dealsResponse.deals
         } catch {
-            print(error)
             throw NetworkError.decodingFailed
         }
     }
@@ -44,7 +43,6 @@ class APIRepository {
         do {
             return try JSONDecoder().decode(Deal.self, from: data)
         } catch {
-            print(error)
             throw NetworkError.decodingFailed
         }
     }
