@@ -62,7 +62,7 @@ struct Prices: Codable {
 
 typealias PriceAmount = Int
 
-extension PriceAmount {
+extension Double {
     func toDecimal() -> Double {
         return Double(self) / 100
     }
@@ -76,8 +76,8 @@ struct Price: Codable {
     let amount: PriceAmount
     let currency: PriceCurrency
     
-    func toString() -> String {
-        return "\(currency.symbol) \(amount.toDecimalString())"
+    func toString(currency: Currency) -> String {
+        return "\(currency.symbol) \((Double(amount) * currency.fromEuroMultiplier).toDecimalString())"
     }
 }
 

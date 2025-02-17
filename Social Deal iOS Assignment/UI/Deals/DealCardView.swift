@@ -10,6 +10,7 @@ import Combine
 
 class DealCardView: UIView {
     private let favouriteViewModel = FavouriteViewModel.shared
+    private let settingsViewModel = SettingsViewModel.shared
     var deal: Deal?
     
     private let imageView: UIImageView = {
@@ -152,15 +153,7 @@ class DealCardView: UIView {
         locationLabel.text = deal.city
         soldAmountLabel.text = deal.soldLabel
         
-        let attributedString = NSMutableAttributedString(string: deal.prices.fromPrice?.toString() ?? "")
-        attributedString.addAttribute(
-            .strikethroughStyle,
-            value: NSUnderlineStyle.single.rawValue,
-            range: NSRange(location: 0, length: attributedString.length)
-        )
-        fromPriceLabel.attributedText = attributedString
-        
-        priceLabel.text = deal.prices.price.toString()
+        setPrice(with: deal.prices)
         
         reloadFavourite()
     }
@@ -170,6 +163,21 @@ class DealCardView: UIView {
     override func didMoveToWindow() {
         super.didMoveToWindow()
         reloadFavourite()
+        if let deal {
+            setPrice(with: deal.prices)
+        }
+    }
+    
+    private func setPrice(with prices: Prices) {
+        let attributedString = NSMutableAttributedString(string: prices.fromPrice?.toString(currency: settingsViewModel.selectedCurrency) ?? "")
+        attributedString.addAttribute(
+            .strikethroughStyle,
+            value: NSUnderlineStyle.single.rawValue,
+            range: NSRange(location: 0, length: attributedString.length)
+        )
+        fromPriceLabel.attributedText = attributedString
+        
+        priceLabel.text = prices.price.toString(currency: settingsViewModel.selectedCurrency)
     }
     
     func reloadFavourite() {

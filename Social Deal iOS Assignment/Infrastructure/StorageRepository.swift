@@ -20,4 +20,15 @@ class StorageRepository {
         }
         return try! JSONDecoder().decode([Deal].self, from: data)
     }
+    
+    private static let currencyKey = "currency"
+    static func saveCurrency(_ currency: Currency) {
+        UserDefaults.standard.set(currency.rawValue, forKey: currencyKey)
+    }
+    
+    static func getCurrency() -> Currency {
+        let data = UserDefaults.standard.integer(forKey: currencyKey)
+        return Currency(rawValue: data) ?? .euro
+    }
+    
 }
