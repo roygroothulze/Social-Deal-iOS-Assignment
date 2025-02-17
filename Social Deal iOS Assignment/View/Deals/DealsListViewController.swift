@@ -28,6 +28,13 @@ class DealsListViewController: UIViewController {
             await viewModel.fetchDeals()
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedIndexPath, animated: animated)
+        }
+    }
 
     private func setupTableView() {
         view.addSubview(tableView)
@@ -37,7 +44,8 @@ class DealsListViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-
+        
+        tableView.delegate = self
         tableView.dataSource = self
         tableView.register(DealTableViewCell.self, forCellReuseIdentifier: "DealCell")
     }
@@ -67,7 +75,7 @@ class DealsListViewController: UIViewController {
     }
 }
 
-extension DealsListViewController: UITableViewDataSource {
+extension DealsListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.deals.count
     }
@@ -79,5 +87,12 @@ extension DealsListViewController: UITableViewDataSource {
         let deal = viewModel.deals[indexPath.row]
         cell.configure(with: deal)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let deal = viewModel.deals[indexPath.row]
+        let vc = DealsDetailsViewController()
+        vc.configure(dealId: deal.id)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

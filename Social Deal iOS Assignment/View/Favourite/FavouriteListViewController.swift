@@ -25,6 +25,13 @@ class FavouriteListViewController: UIViewController {
         setupTableView()
         bindViewModel()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedIndexPath, animated: animated)
+        }
+    }
 
     private func setupTableView() {
         view.addSubview(tableView)
@@ -35,6 +42,7 @@ class FavouriteListViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
 
+        tableView.delegate = self
         tableView.dataSource = self
         tableView.register(DealTableViewCell.self, forCellReuseIdentifier: "DealCell")
     }
@@ -55,7 +63,7 @@ class FavouriteListViewController: UIViewController {
     }
 }
 
-extension FavouriteListViewController: UITableViewDataSource {
+extension FavouriteListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.favourites.count
     }
@@ -67,6 +75,13 @@ extension FavouriteListViewController: UITableViewDataSource {
         let deal = viewModel.favourites[indexPath.row]
         cell.configure(with: deal)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let deal = viewModel.favourites[indexPath.row]
+        let vc = DealsDetailsViewController()
+        vc.configure(dealId: deal.id)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

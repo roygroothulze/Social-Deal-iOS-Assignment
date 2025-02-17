@@ -29,7 +29,8 @@ struct Deal: Codable, Identifiable {
     var id: String { unique }
     let unique: String
     let title: String
-    let image: DealImage
+    let description: String?
+    let image: DealImage?
     let soldLabel: String
     let company: String
     let city: String
@@ -38,6 +39,7 @@ struct Deal: Codable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case unique
         case title
+        case description
         case image
         case soldLabel = "sold_label"
         case company

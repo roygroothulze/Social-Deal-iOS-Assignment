@@ -19,4 +19,13 @@ class DealService {
             return []
         }
     }
+    
+    func fetchDeal(with id: String) async -> Deal? {
+        do {
+            return try await APIRepository.fetchDeal(with: id)
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
 }

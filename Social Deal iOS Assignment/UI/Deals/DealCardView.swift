@@ -113,7 +113,7 @@ class DealCardView: UIView {
             imageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            imageView.heightAnchor.constraint(equalToConstant: 200),
+//            imageView.heightAnchor.constraint(equalToConstant: 200),
 
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
             titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
@@ -144,8 +144,16 @@ class DealCardView: UIView {
     
     func configure(with deal: Deal) {
         self.deal = deal
-        if let url = deal.image.fullURL {
+        if let url = deal.image?.fullURL {
             loadImage(from: url)
+            NSLayoutConstraint.activate([
+                imageView.heightAnchor.constraint(equalToConstant: 200),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                imageView.heightAnchor.constraint(equalToConstant: 0),
+            ])
+            imageView.isHidden = true
         }
         
         titleLabel.text = deal.title
