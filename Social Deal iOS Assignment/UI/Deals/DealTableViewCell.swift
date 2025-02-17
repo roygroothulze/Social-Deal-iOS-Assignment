@@ -10,6 +10,10 @@ import UIKit
 class DealTableViewCell: UITableViewCell {
 
     private let dealCardView = DealCardView()
+    
+    var deal: Deal? {
+        dealCardView.deal
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -35,5 +39,9 @@ class DealTableViewCell: UITableViewCell {
 
     func configure(with deal: Deal) {
         dealCardView.configure(with: deal)
+    }
+    
+    func reloadFavourite() {
+        dealCardView.reloadFavourite()
     }
 }

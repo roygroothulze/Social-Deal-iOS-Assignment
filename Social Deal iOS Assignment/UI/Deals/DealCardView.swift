@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import Combine
 
 class DealCardView: UIView {
+    private let favouriteViewModel = FavouriteViewModel.shared
     var deal: Deal?
     
     private let imageView: UIImageView = {
@@ -30,6 +32,15 @@ class DealCardView: UIView {
     }()
     
     private let companyLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .gray
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let locationLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .gray
@@ -81,12 +92,13 @@ class DealCardView: UIView {
         super.init(coder: coder)
         setupView()
     }
-
+    
     // Setup the view components
     private func setupView() {
         addSubview(imageView)
         addSubview(titleLabel)
         addSubview(companyLabel)
+        addSubview(locationLabel)
         addSubview(soldAmountLabel)
         addSubview(fromPriceLabel)
         addSubview(priceLabel)
@@ -110,13 +122,17 @@ class DealCardView: UIView {
             companyLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
             companyLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
 
+            locationLabel.topAnchor.constraint(equalTo: companyLabel.bottomAnchor, constant: 4),
+            locationLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            locationLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+
             soldAmountLabel.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
             soldAmountLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
 
             fromPriceLabel.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
             fromPriceLabel.trailingAnchor.constraint(equalTo: priceLabel.leadingAnchor, constant: -10),
 
-            priceLabel.topAnchor.constraint(equalTo: companyLabel.bottomAnchor, constant: 10),
+            priceLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 10),
             priceLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
             priceLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
 
@@ -133,6 +149,7 @@ class DealCardView: UIView {
         
         titleLabel.text = deal.title
         companyLabel.text = deal.company
+        locationLabel.text = deal.city
         soldAmountLabel.text = deal.soldLabel
         
         let attributedString = NSMutableAttributedString(string: deal.prices.fromPrice?.toString() ?? "")
@@ -145,8 +162,23 @@ class DealCardView: UIView {
         
         priceLabel.text = deal.prices.price.toString()
         
-        if FavouriteService.shared.isFavourite(deal) {
+        reloadFavourite()
+    }
+    
+    // Reload favourite state when moved to window.
+    // The favourite state can be changed from another place in the app
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        reloadFavourite()
+    }
+    
+    func reloadFavourite() {
+        guard let deal else { return }
+        
+        if favouriteViewModel.isFavourite(deal) {
             favouriteIcon.image = UIImage(systemName: "heart.fill")
+        } else {
+            favouriteIcon.image = UIImage(systemName: "heart")
         }
     }
     
@@ -166,13 +198,8 @@ class DealCardView: UIView {
     
     @objc func handleFavouriteTap() {
         guard let deal else { return }
-        if FavouriteService.shared.isFavourite(deal) {
-            favouriteIcon.image = UIImage(systemName: "heart")
-        } else {
-            favouriteIcon.image = UIImage(systemName: "heart.fill")
-        }
-        
-        FavouriteService.shared.toggleFavourite(deal)
+        favouriteViewModel.toggleFavourite(deal)
+        reloadFavourite()
     }
 
 }

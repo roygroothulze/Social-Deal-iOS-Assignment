@@ -1,5 +1,5 @@
 //
-//  DealViewModel.swift
+//  DealsListViewModel.swift
 //  Social Deal iOS Assignment
 //
 //  Created by CodeBlock on 15/02/2025.
@@ -15,6 +15,7 @@ class DealsListViewModel: ObservableObject {
     private let dealService = DealService.shared
 
     func fetchDeals() async {
+        deals = []
         deals = await dealService.fetchDeals()
     }
 }

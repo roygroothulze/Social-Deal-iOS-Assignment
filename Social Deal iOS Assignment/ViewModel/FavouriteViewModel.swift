@@ -1,17 +1,19 @@
 //
-//  FavouriteService.swift
+//  FavouriteViewModel.swift
 //  Social Deal iOS Assignment
 //
 //  Created by CodeBlock on 16/02/2025.
 //
 
-class FavouriteService {
-    static let shared = FavouriteService()
+import Foundation
+
+class FavouriteViewModel: ObservableObject {
+    static let shared = FavouriteViewModel()
     private init() {
         loadFavourites()
     }
     
-    private(set) var favourites: [Deal] = []
+    @Published private(set) var favourites: [Deal] = []
     
     private func loadFavourites() {
         favourites = StorageRepository.getFavourites()
